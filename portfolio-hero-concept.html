@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muhammad Ibrahim — AI Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Embedded content.js Data -->
+<script>
+const portfolioData = {
+  // 1. Basic Information
+  hero: {
+    name: "Muhammad Ibrahim",
+    role: "AI ENGINEER",
+    typedText: "I BUILD SOFTWARE THAT ACTUALLY WORKS | FULL-STACK AI DEVELOPER"
+  },
+
+  // 2. Main Links (Buttons & Nav)
+  links: {
+    github: "https://github.com/muhammadibrahimbsai-2024a-cpu",
+    resume: "file:///c%3A/Users/IBRAHIM%20KHAN/Desktop/portfolio/portfolio-hero-concept.html",
+    contactEmail: "muhammad.ibrahim.bsai-2024a@cecosian.edu.pk"
+  },
+
+  // 3. Marquee Skills (Add or remove skills here)
+  skills: [
+    "PYTHON", "AI/ML", "DEEP LEARNING", "COMPUTER VISION", 
+    "NUMPY", "PANDAS", "MATPLOTLIB", "TENSORFLOW", "PYTORCH"
+  ],
+
+  // 4. Projects Showcase (Add new projects to this list)
+  projects: [
+    {
+      title: "AI BASED EMOTION DETECTION SYSTEM",
+      description: "A real-time project that track your emotion and your mood ",
+      techStack: ["Python", "OpenCV", "CNN"],
+      demoLink: "file:///C:/Users/IBRAHIM%20KHAN/Downloads/emotion_detector%20(2).html", // Leave empty string "" if no demo
+      githubLink: "https://github.com/muhammadibrahimbsai-2024a-cpu/AI_BASED-EMOTION-DETECTION-"
+    },
+    {
+      title: "AI BASED THERMAL VEGETATION",
+      description: "An Java script Html web based prototype it can be used for vegetation it tells the temprature if you click on it and requred plantatyion to control temprature.",
+      techStack: ["JavaScript", "leaflet.js", "html", "css"],
+      demoLink: "file:///C:/Users/IBRAHIM%20KHAN/Desktop/sbtv_prototype/greensat-vision%20(1).html", // No demo available
+      githubLink: "https://github.com/muhammadibrahimbsai-2024a-cpu/AI_BASED-THERMAL-VEGETATION"
+    },
+    {}
+  ]
+};
+</script>
+
+<style>
+  :root{
+    --bg: #060b08;
+    --bg-panel: #0c1712;
+    --green: #17df88;
+    --green-dim: #1b8f63;
+    --violet: #1eb61b;
+    --violet-dim: #48d21e;
+    --text: #07cd5a;
+    --text-dim: #41e03b;
+    --border: rgba(61,255,170,0.16);
+    --border-violet: rgba(198, 240, 79, 0.28);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  /* ambient background */
+  .glow-a, .glow-b {
+    position: fixed;
+    width: 46vw;
+    height: 46vw;
+    border-radius: 50%;
+    filter: blur(90px);
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.28;
+  }
+  .glow-a { background: var(--green); top: -14vw; left: -12vw; animation: drift-a 22s ease-in-out infinite alternate; }
+  .glow-b { background: var(--violet); bottom: -18vw; right: -10vw; animation: drift-b 26s ease-in-out infinite alternate; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glow-a, .glow-b, .cube, .marquee-track { animation: none !important; }
+  }
+
+  @keyframes drift-a { from { transform: translate(0,0); } to { transform: translate(4vw, 5vw); } }
+  @keyframes drift-b { from { transform: translate(0,0); } to { transform: translate(-3vw, -4vw); } }
+
+  .grid-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-image:
+      linear-gradient(rgba(61,255,170,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(61,255,170,0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 20%, black 40%, transparent 90%);
+  }
+
+  nav {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 28px clamp(20px, 4vw, 40px);
+  }
+
+  .logo { font-weight: 700; letter-spacing: 0.02em; font-size: 15px; color: var(--text); text-decoration: none;}
+  .logo span { color: var(--green); }
+
+  .nav-links { display: flex; gap: 32px; list-style: none; margin: 0; padding: 0; }
+  .nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+  }
+  .nav-links a:hover, .nav-links a:focus-visible { color: var(--green); }
+
+  @media (max-width: 640px) { .nav-links { display: none; } }
+
+  main {
+    position: relative;
+    z-index: 2;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: clamp(40px, 8vw, 90px) clamp(20px, 4vw, 40px) 0;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    color: var(--green);
+    border: 1px solid var(--border);
+    background: rgba(61,255,170,0.05);
+    padding: 6px 12px;
+    border-radius: 100px;
+    margin-bottom: 22px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+  }
+
+  h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: clamp(38px, 6vw, 64px);
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+    margin: 0 0 20px;
+  }
+  h1 .accent { color: var(--violet); }
+
+  .terminal-line {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: clamp(14px, 1.6vw, 16px);
+    color: var(--green);
+    margin: 0 0 26px;
+    min-height: 22px;
+  }
+  .terminal-line .cursor {
+    display: inline-block;
+    width: 8px; height: 15px;
+    background: var(--green);
+    margin-left: 2px;
+    vertical-align: -2px;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13.5px;
+    letter-spacing: 0.02em;
+    padding: 13px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .btn-primary {
+    background: var(--green);
+    color: #04150d;
+    font-weight: 500;
+    box-shadow: 0 0 0 rgba(61,255,170,0);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(61,255,170,0.25); }
+  .btn-ghost {
+    color: var(--violet);
+    border: 1px solid var(--border-violet);
+    background: rgba(179,133,240,0.04);
+  }
+  .btn-ghost:hover { transform: translateY(-2px); background: rgba(179,133,240,0.1); }
+  .btn-small { padding: 8px 16px; font-size: 12px; }
+
+  /* 3D cube */
+  .cube-stage { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .cube-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .cube-wrap {
+    perspective: 1100px;
+    width: 210px;
+    height: 210px;
+  }
+  .cube {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    animation: spin 20s linear infinite;
+    filter: drop-shadow(0 0 30px rgba(61,255,170,0.12)) drop-shadow(0 0 46px rgba(179,133,240,0.1));
+  }
+  @keyframes spin {
+    from { transform: rotateX(-10deg) rotateY(0deg); }
+    to   { transform: rotateX(-10deg) rotateY(360deg); }
+  }
+  .face {
+    position: absolute;
+    width: 210px;
+    height: 210px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    background: linear-gradient(160deg, rgba(61,255,170,0.06), rgba(179,133,240,0.06));
+    backdrop-filter: blur(1px);
+  }
+  .face:nth-child(odd)  { border: 1px solid var(--border); color: var(--green); }
+  .face:nth-child(even) { border: 1px solid var(--border-violet); color: var(--violet); }
+  .face.front { transform: translateZ(105px); }
+  .face.right { transform: rotateY(90deg) translateZ(105px); }
+  .face.back  { transform: rotateY(180deg) translateZ(105px); }
+  .face.left  { transform: rotateY(-90deg) translateZ(105px); }
+
+  /* ticker */
+  .marquee {
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-top: clamp(56px, 9vw, 100px);
+    padding: 16px 0;
+    overflow: hidden;
+    background: rgba(255,255,255,0.012);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 40px;
+    width: max-content;
+    animation: scroll 26s linear infinite;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+  .marquee-track span.dot { color: var(--green); }
+  @keyframes scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* Projects Section */
+  .projects-section {
+    position: relative;
+    z-index: 2;
+    max-width: 1120px;
+    margin: 80px auto 0;
+    padding: 0 clamp(20px, 4vw, 40px);
+  }
+  .section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 32px;
+    color: var(--green);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-title::after {
+    content: '';
+    flex-grow: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+  }
+  
+  .project-card {
+    background: rgba(12, 23, 18, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    backdrop-filter: blur(10px);
+  }
+  .project-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--green);
+  }
+  .project-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    color: #fff;
+    margin: 0 0 12px 0;
+  }
+  .project-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-dim);
+    margin: 0 0 24px 0;
+    flex-grow: 1;
+  }
+  .tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .tech-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--violet);
+    background: rgba(179,133,240,0.06);
+    padding: 4px 10px;
+    border-radius: 100px;
+    border: 1px solid var(--border-violet);
+  }
+  .project-links {
+    display: flex;
+    gap: 12px;
+  }
+
+  footer.spacer { height: 80px; }
+</style>
+</head>
+<body>
+
+<div class="glow-a"></div>
+<div class="glow-b"></div>
+<div class="grid-overlay"></div>
+
+<nav>
+  <a href="#" class="logo">M<span>_</span>IBRAHIM</a>
+  <ul class="nav-links">
+    <li><a href="#projects">Projects</a></li>
+    <li><a id="nav-contact" href="#">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="hero">
+    <div>
+      <div class="eyebrow" id="hero-role">AI ENGINEER</div>
+      <h1>Muhammad<br>Ibrahim<span class="accent">.</span></h1>
+      <p class="terminal-line mono">&gt; <span id="typed"></span><span class="cursor"></span></p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#projects">View projects →</a>
+        <a class="btn btn-ghost" id="hero-github" href="#" target="_blank">GitHub ↗</a>
+      </div>
+    </div>
+
+    <div class="cube-stage">
+      <div class="cube-wrap">
+        <div class="cube">
+          <div class="face front">WEB<br>APPS</div>
+          <div class="face right">AI /<br>ML</div>
+          <div class="face back">CV /<br>DL</div>
+          <div class="face left">MOBILE<br>APPS</div>
+        </div>
+      </div>
+      <div class="cube-label">systems i build</div>
+    </div>
+  </div>
+</main>
+
+<div class="marquee">
+  <div class="marquee-track" id="track"></div>
+</div>
+
+<!-- NEW: Dynamic Projects Section -->
+<section class="projects-section" id="projects">
+  <h2 class="section-title">Projects</h2>
+  <div class="projects-grid" id="projects-container">
+    <!-- Projects will be injected here by JavaScript -->
+  </div>
+</section>
+
+<footer class="spacer"></footer>
+
+<script>
+  // --- 1. POPULATE BASIC DATA ---
+  document.getElementById('hero-role').textContent = portfolioData.hero.role;
+  document.getElementById('hero-github').href = portfolioData.links.github;
+  document.getElementById('nav-contact').href = portfolioData.links.contactEmail;
+
+  // --- 2. TYPED TERMINAL LINE ---
+  const text = portfolioData.hero.typedText;
+  const el = document.getElementById('typed');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) {
+    el.textContent = text;
+  } else {
+    let i = 0;
+    (function type(){
+      if (i <= text.length) {
+        el.textContent = text.slice(0, i);
+        i++;
+        setTimeout(type, 38);
+      }
+    })();
+  }
+
+  // --- 3. MARQUEE SKILLS ---
+  const html = portfolioData.skills.map(function(t){ 
+    return '<span><span class="dot">·</span> ' + t + '</span>'; 
+  }).join('');
+  document.getElementById('track').innerHTML = html + html;
+
+  // --- 4. POPULATE PROJECTS ---
+  const projectsContainer = document.getElementById('projects-container');
+  
+  portfolioData.projects.forEach(project => {
+    // Generate Tech Tags
+    const techTags = project.techStack
+        .map(tech => `<span class="tech-tag">${tech}</span>`)
+        .join('');
+
+    // Generate Buttons (Only show Demo button if a link exists)
+    let linksHtml = '';
+    if(project.demoLink) {
+        linksHtml += `<a href="${project.demoLink}" target="_blank" class="btn btn-primary btn-small">Demo ↗</a>`;
+    }
+    if(project.githubLink) {
+        linksHtml += `<a href="${project.githubLink}" target="_blank" class="btn btn-ghost btn-small">Code ↗</a>`;
+    }
+
+    // Build the Card HTML
+    const cardHtml = `
+      <div class="project-card">
+        <h3 class="project-title">${project.title}</h3>
+        <p class="project-desc">${project.description}</p>
+        <div class="tech-stack">
+          ${techTags}
+        </div>
+        <div class="project-links">
+          ${linksHtml}
+        </div>
+      </div>
+    `;
+
+    // Inject into the page
+    projectsContainer.innerHTML += cardHtml;
+  });
+</script>
+
+</body>
+</html>
