@@ -50,6 +50,162 @@ const portfolioData = {
     {}
   ]
 };
+
+/* ============================================================
+   CHATBOT KNOWLEDGE BASE — edit this when you upload your data
+   ------------------------------------------------------------
+   Fill in the fields below with your real info (plain text /
+   short arrays — no logic to touch). The chatbot below matches
+   keywords in a visitor's question to one of these topics.
+   Leave a field empty ("" or []) and the bot will say that part
+   isn't added yet, instead of breaking.
+   ============================================================ */
+const aboutMeData = {
+  // 2-3 sentences, first person, casual tone.
+  bio: "Hey, I'm Ibrahim — a 21-year-old AI Engineering student at CECOS University, Peshawar. I'm currently sharpening my model training skills and just started my first internship at DecodeLabs. I like turning ideas into complete, working software rather than half-built demos.",
+
+  quickFacts: {
+    age: "21"
+  },
+
+  education: [
+    // { degree: "...", institution: "...", years: "..." } — add one object per entry
+    { degree: "Matriculation", institution: "Working Folks Grammar Higher & Secondary School System", years: "" },
+    { degree: "FSc", institution: "Working Folks Grammar Higher & Secondary School System", years: "" },
+    { degree: "BS Artificial Intelligence (in progress) — CGPA 3.3", institution: "CECOS University, Peshawar", years: "2024 – present" }
+  ],
+
+  experience: [
+    // { role: "...", place: "...", duration: "...", summary: "..." }
+    { role: "AI Engineering Intern", place: "DecodeLabs", duration: "2026 – present", summary: "First internship — working through an Industrial Training Kit, currently focused on model training." }
+  ],
+
+  currentlyLearning: [
+    // skills being actively worked on right now
+    "Model training"
+  ],
+
+  interests: [
+    // "Machine learning", "Chess", "Gaming", ...
+  ],
+
+  achievements: [
+    // "Certification / competition / notable result", ...
+  ],
+
+  contact: {
+    email: portfolioData.links.contactEmail,
+    location: "", // e.g. "Peshawar, Pakistan"
+    linkedin: ""  // full URL, optional
+  }
+};
+
+/* ------------------------------------------------------------
+   INTENTS — each one is: a name, a list of trigger keywords,
+   and a respond() function that builds the reply from the data
+   above. Add a new intent by copying one of these blocks.
+   ------------------------------------------------------------ */
+const chatIntents = [
+  {
+    name: "greeting",
+    keywords: ["hi", "hello", "hey", "salaam", "assalam", "yo"],
+    respond: () => "Hey! I'm a rule-based assistant trained on Ibrahim's data. Ask me about his skills, projects, education, experience, or how to contact him."
+  },
+  {
+    name: "skills",
+    keywords: ["skill", "skills", "technology", "technologies", "tech", "stack", "tool", "tools", "language", "languages", "know"],
+    respond: () => "Ibrahim works with: " + portfolioData.skills.join(", ") + "."
+  },
+  {
+    name: "projects",
+    keywords: ["project", "projects", "built", "build", "made", "work", "portfolio", "github", "repo"],
+    respond: () => {
+      const list = portfolioData.projects
+        .filter(p => p.title)
+        .map(p => "• " + p.title + " — " + p.description)
+        .join("\n");
+      return "Here's what Ibrahim has built:\n" + list;
+    }
+  },
+  {
+    name: "education",
+    keywords: ["study", "studying", "studies", "university", "degree", "school", "education", "college", "cgpa", "gpa"],
+    respond: () => {
+      if (!aboutMeData.education.length) return "Education details haven't been added yet.";
+      return aboutMeData.education.map(e => e.degree + " — " + e.institution + (e.years ? " (" + e.years + ")" : "")).join("\n");
+    }
+  },
+  {
+    name: "age",
+    keywords: ["old", "age"],
+    respond: () => "I'm " + aboutMeData.quickFacts.age + " years old."
+  },
+  {
+    name: "learning",
+    keywords: ["learning", "improving", "practicing", "currently"],
+    respond: () => aboutMeData.currentlyLearning.length ? "Right now I'm sharpening: " + aboutMeData.currentlyLearning.join(", ") + "." : "Not added yet."
+  },
+  {
+    name: "experience",
+    keywords: ["experience", "job", "internship", "worked", "company", "role"],
+    respond: () => {
+      if (!aboutMeData.experience.length) return "Experience details haven't been added yet.";
+      return aboutMeData.experience.map(e => e.role + " @ " + e.place + " (" + e.duration + ") — " + e.summary).join("\n");
+    }
+  },
+  {
+    name: "interests",
+    keywords: ["hobby", "hobbies", "interest", "free time", "fun"],
+    respond: () => aboutMeData.interests.length ? "Outside of code: " + aboutMeData.interests.join(", ") + "." : "Not added yet."
+  },
+  {
+    name: "contact",
+    keywords: ["contact", "email", "reach", "hire", "hiring", "linkedin", "connect", "touch"],
+    respond: () => {
+      const parts = ["Email: " + aboutMeData.contact.email];
+      if (aboutMeData.contact.linkedin) parts.push("LinkedIn: " + aboutMeData.contact.linkedin);
+      if (aboutMeData.contact.location) parts.push("Based in: " + aboutMeData.contact.location);
+      return parts.join("\n");
+    }
+  },
+  {
+    name: "about",
+    keywords: ["who", "about you", "yourself", "bio", "introduce", "tell me about"],
+    respond: () => aboutMeData.bio
+  },
+  {
+    name: "thanks",
+    keywords: ["thanks", "thank you", "thx", "appreciate"],
+    respond: () => "You're welcome! Anything else you'd like to know?"
+  }
+];
+
+const FALLBACK_RESPONSES = [
+  "I don't have an answer for that yet — try asking about skills, projects, education, experience, or contact info.",
+  "Not sure about that one. I can talk about Ibrahim's skills, projects, background, or how to reach him."
+];
+
+function escapeRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+// Scores every intent by counting keyword hits in the visitor's
+// text (whole-word/phrase matches only, so "hi" won't fire on
+// "this" and "yo" won't fire on "you"), and returns the best
+// match's response — or a fallback if nothing scores.
+function matchIntent(userText) {
+  const text = userText.toLowerCase();
+  let best = null;
+  let bestScore = 0;
+  chatIntents.forEach(intent => {
+    let score = 0;
+    intent.keywords.forEach(k => {
+      const re = new RegExp('\\b' + escapeRegex(k.toLowerCase()) + '\\b');
+      if (re.test(text)) score++;
+    });
+    if (score > bestScore) { bestScore = score; best = intent; }
+  });
+  if (!best) return FALLBACK_RESPONSES[Math.floor(Math.random() * FALLBACK_RESPONSES.length)];
+  return best.respond();
+}
 </script>
 
 <style>
@@ -386,6 +542,141 @@ const portfolioData = {
   }
 
   footer.spacer { height: 80px; }
+
+  /* Chatbot Widget */
+  .chat-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 50;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #04150d;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(23,223,136,0.28);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .chat-toggle:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 10px 30px rgba(23,223,136,0.38); }
+  .chat-toggle svg { width: 24px; height: 24px; }
+  .chat-toggle .close-icon { display: none; }
+  .chat-toggle.open .chat-icon { display: none; }
+  .chat-toggle.open .close-icon { display: block; }
+
+  .chat-panel {
+    position: fixed;
+    bottom: 92px;
+    right: 24px;
+    z-index: 50;
+    width: min(360px, calc(100vw - 32px));
+    height: min(480px, calc(100vh - 140px));
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+  .chat-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+
+  .chat-header {
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+  .chat-header .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .chat-header .sub { color: var(--text-dim); font-weight: 400; text-transform: none; letter-spacing: 0; margin-left: auto; font-size: 11px; }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .msg {
+    max-width: 86%;
+    padding: 10px 13px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    font-family: 'IBM Plex Sans', sans-serif;
+    white-space: pre-wrap;
+  }
+  .msg.bot { align-self: flex-start; background: rgba(23,223,136,0.07); border: 1px solid var(--border); color: var(--text); }
+  .msg.user { align-self: flex-end; background: rgba(30,182,27,0.12); border: 1px solid var(--border-violet); color: #eafff2; }
+  .msg.typing { display: flex; gap: 4px; align-items: center; }
+  .msg.typing span { width: 5px; height: 5px; border-radius: 50%; background: var(--green); animation: pulse 1.1s infinite ease-in-out; }
+  .msg.typing span:nth-child(2) { animation-delay: 0.15s; }
+  .msg.typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes pulse { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
+
+  .chat-suggestions { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 16px 12px; flex-shrink: 0; }
+  .chip {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--violet);
+    background: rgba(179,133,240,0.06);
+    border: 1px solid var(--border-violet);
+    padding: 5px 10px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .chip:hover { background: rgba(179,133,240,0.14); }
+
+  .chat-input-row { display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid var(--border); flex-shrink: 0; }
+  .chat-input-row input {
+    flex: 1;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13.5px;
+    outline: none;
+    min-width: 0;
+  }
+  .chat-input-row input:focus { border-color: var(--green); }
+  .chat-input-row input::placeholder { color: var(--text-dim); opacity: 0.6; }
+  .chat-send {
+    width: 38px; height: 38px;
+    border-radius: 8px;
+    border: none;
+    background: var(--green);
+    color: #04150d;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.15s ease;
+  }
+  .chat-send:hover { transform: translateY(-1px); }
+  .chat-send:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+  @media (max-width: 480px) {
+    .chat-panel { right: 16px; bottom: 84px; }
+    .chat-toggle { right: 16px; bottom: 16px; }
+  }
 </style>
 </head>
 <body>
@@ -442,6 +733,28 @@ const portfolioData = {
 
 <footer class="spacer"></footer>
 
+<!-- Chatbot Widget -->
+<button class="chat-toggle" id="chatToggle" aria-label="Ask about Ibrahim" aria-expanded="false">
+  <svg class="chat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+  <svg class="close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+</button>
+
+<div class="chat-panel" id="chatPanel" role="dialog" aria-label="Chat about Muhammad Ibrahim">
+  <div class="chat-header">
+    <span class="dot"></span>
+    <span>ASK_ABOUT_IBRAHIM</span>
+    <span class="sub">rule-based</span>
+  </div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-suggestions" id="chatSuggestions"></div>
+  <div class="chat-input-row">
+    <input type="text" id="chatInput" placeholder="Ask a question..." autocomplete="off">
+    <button class="chat-send" id="chatSend" aria-label="Send">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    </button>
+  </div>
+</div>
+
 <script>
   // --- 1. POPULATE BASIC DATA ---
   document.getElementById('hero-role').textContent = portfolioData.hero.role;
@@ -474,7 +787,7 @@ const portfolioData = {
   // --- 4. POPULATE PROJECTS ---
   const projectsContainer = document.getElementById('projects-container');
   
-  portfolioData.projects.forEach(project => {
+  portfolioData.projects.filter(project => project.title).forEach(project => {
     // Generate Tech Tags
     const techTags = project.techStack
         .map(tech => `<span class="tech-tag">${tech}</span>`)
@@ -506,6 +819,98 @@ const portfolioData = {
     // Inject into the page
     projectsContainer.innerHTML += cardHtml;
   });
+</script>
+
+<!-- Chatbot wiring: uses aboutMeData / chatIntents / matchIntent() defined in <head> -->
+<script>
+(function initChatbot(){
+  const toggle = document.getElementById('chatToggle');
+  const panel = document.getElementById('chatPanel');
+  const messagesEl = document.getElementById('chatMessages');
+  const input = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('chatSend');
+  const suggestionsWrap = document.getElementById('chatSuggestions');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const SUGGESTIONS = ["Skills", "Projects", "Education", "Contact"];
+  let greeted = false;
+
+  function addMessage(text, sender) {
+    const div = document.createElement('div');
+    div.className = 'msg ' + sender;
+    div.textContent = text;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function addTyping() {
+    const div = document.createElement('div');
+    div.className = 'msg bot typing';
+    div.id = 'typingIndicator';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function removeTyping() {
+    const el = document.getElementById('typingIndicator');
+    if (el) el.remove();
+  }
+
+  function respondTo(userText) {
+    addMessage(userText, 'user');
+    const delay = reducedMotion ? 0 : 420 + Math.random() * 380;
+    addTyping();
+    setTimeout(() => {
+      removeTyping();
+      addMessage(matchIntent(userText), 'bot');
+    }, delay);
+  }
+
+  function renderSuggestions() {
+    suggestionsWrap.innerHTML = '';
+    SUGGESTIONS.forEach(label => {
+      const chip = document.createElement('button');
+      chip.className = 'chip';
+      chip.type = 'button';
+      chip.textContent = label;
+      chip.addEventListener('click', () => respondTo(label));
+      suggestionsWrap.appendChild(chip);
+    });
+  }
+
+  function openPanel() {
+    panel.classList.add('open');
+    toggle.classList.add('open');
+    toggle.setAttribute('aria-expanded', 'true');
+    if (!greeted) {
+      greeted = true;
+      addMessage("Hi! I'm a rule-based assistant that knows about Ibrahim. Ask me anything, or tap a suggestion below.", 'bot');
+      renderSuggestions();
+    }
+    input.focus();
+  }
+
+  function closePanel() {
+    panel.classList.remove('open');
+    toggle.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+
+  toggle.addEventListener('click', () => {
+    panel.classList.contains('open') ? closePanel() : openPanel();
+  });
+
+  function submit() {
+    const val = input.value.trim();
+    if (!val) return;
+    input.value = '';
+    respondTo(val);
+  }
+
+  sendBtn.addEventListener('click', submit);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(); });
+})();
 </script>
 
 </body>
